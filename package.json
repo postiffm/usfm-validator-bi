@@ -1,0 +1,63 @@
+{
+    "name": "usfmforbi",
+    "displayName": "USFM Validator for Bibles International",
+    "description": "Sytanx highlighting of USFM documents used by Bibles International",
+    "version": "0.0.2",
+    "engines": {
+        "vscode": "^1.43.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onLanguage:usfmforbi"
+    ],
+    "main": "./out/extension",
+    "contributes": {
+        "languages": [
+            {
+                "id": "usfmforbi",
+                "aliases": [
+                    "USFM for BI",
+                    "SFM for BI"
+                ],
+                "extensions": [
+                    ".sfm",
+                    ".usfm"
+                ]
+            }
+        ],
+        "grammars": [
+            {
+                "language": "usfmforbi",
+                "scopeName": "source.usfmforbi",
+                "path": "./syntaxes/usfm.tmLanguage.json"
+            }
+        ],
+        "themes": [
+            {
+                "label": "BI SFM Formatting",
+                "uiTheme": "vs-dark",
+                "path": "./themes/BI SFM Formatting-color-theme.json"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    },
+    "dependencies": {
+        "vscode-languageserver": "^4.1.3",
+        "vscode-languageclient": "^4.1.3"
+    },
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6",
+        "tslint": "^5.8.0",
+        "@types/node": "^7.0.43",
+        "@types/mocha": "^2.2.42"
+    }
+}

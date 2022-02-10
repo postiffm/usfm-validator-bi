@@ -1,0 +1,125 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "usfmforbi",
+	"patterns": [
+		{
+			"include": "#reftags"
+		},
+		{
+			"include": "#versetags"
+		},
+		{
+			"include": "#transliterations"
+		},
+		{
+			"include": "#italics"
+		},
+		{
+			"include": "#footnotes"
+		},
+		{
+			"include": "#selahtags"
+		},
+		{
+			"include": "#deityname"
+		},
+		{
+			"include": "#quotation"
+		},
+		{
+			"include": "#quoteref"
+		},
+		{
+			"include": "#introoutref"
+		},
+		{
+			"include": "#wordlist"
+		},
+		{
+			"include": "#expression"
+		},
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+				{
+					"name": "keyword.control.usfmforbi",
+					"match": "\\b(if|return)\\b"
+				}
+			]
+		},
+		"strings": {
+			"name": "string.quoted.double.usfmforbi",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.usfmforbi",
+					"match": "\\\\."
+				}
+			]
+		},
+		"expression": {
+			"patterns": [
+				{
+					"include": "#marker"
+				}
+			]
+		},
+		"marker": {
+			"match": "\\\\[a-z0-9\\-]*\\**",
+			"name": "keyword.marker"
+		},
+		"reftags": {
+			"match": "\\\\k.*\\\\k\\*",
+			"name": "text.testing"
+		},
+		"versetags": {
+			"match": "\\\\xt.*?\\\\xt\\*|\\\\x.*?\\\\x\\*",
+			"name": "text.verse"
+		},
+		"transliterations": {
+			"match": "\\\\tl.*?\\\\tl\\*",
+			"name": "text.translit"
+		},
+		"italics": {
+			"match": "\\\\it.*?\\\\it\\*",
+			"name": "text.italics"
+		},
+		"footnotes": {
+			"match": "\\\\f.*?\\\\f\\*",
+			"name": "text.footnotes"
+		},
+		"selahtags": {
+			"match": "\\\\qs.*?\\\\qs\\*",
+			"name": "text.selah"
+		},
+		"deityname": {
+			"match": "\\\\nd.*?\\\\nd\\*",
+			"name": "text.deityname"
+		},
+		"quotation": {
+			"match": "\\\\qt.*?\\\\qt\\*",
+			"name": "text.quotation"
+		},
+		"wordlist": {
+			"match": "\\\\w.*?\\\\w\\*",
+			"name": "text.wordlist"
+		},
+		"quoteref": {
+			"match": "\\\\rq.*?\\\\rq\\*",
+			"name": "text.quoteref"
+		},
+		"introoutref": {
+			"match": "\\\\ior.*?\\\\ior\\*",
+			"name": "text.introoutref"
+		}
+	},
+	"scopeName": "source.usfmforbi"
+}
