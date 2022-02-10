@@ -644,6 +644,15 @@
 			}
 		},
 		{
+			"name": "Custom - Comment",
+			"scope": [
+				"text.comment"
+			],
+			"settings": {
+				"foreground": "#42b913"
+			}
+		},
+		{
 			"name": "Custom - Transliteration",
 			"scope": [
 				"text.translit"

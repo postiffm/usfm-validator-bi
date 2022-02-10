@@ -9,6 +9,9 @@
 			"include": "#versetags"
 		},
 		{
+			"include": "#commenttags"
+		},
+		{
 			"include": "#transliterations"
 		},
 		{
@@ -83,6 +86,10 @@
 		"versetags": {
 			"match": "\\\\xt.*?\\\\xt\\*|\\\\x.*?\\\\x\\*",
 			"name": "text.verse"
+		},
+		"commenttags": {
+			"match": "\\\\rem\\**",
+			"name": "text.comment"
 		},
 		"transliterations": {
 			"match": "\\\\tl.*?\\\\tl\\*",
