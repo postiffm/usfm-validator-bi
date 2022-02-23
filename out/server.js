@@ -83,14 +83,14 @@ function validateUSFM(textDocument) {
         let sourceCodeArr = text.split("\n");
 
         //codes to check: \xt*, \tl*, \nd*, \x*, \k*, \rq*, \f*, \w*
-        let regxtb = /\\xt\s/;
-        let regtlb = /\\tl/;
-        let regndb = /\\nd/;
-        let regxb = /\\x\s/;
-        let regkb = /\\k\s/;
-        let regrqb = /\\rq\s/;
-        let regfb = /\\f\s/;
-        let regwb = /\\w\s/;
+        let regxtb = /\\xt\s/g;
+        let regtlb = /\\tl/g;
+        let regndb = /\\nd/g;
+        let regxb = /\\x\s/g;
+        let regkb = /\\k\s/g;
+        let regrqb = /\\rq\s/g;
+        let regfb = /\\f\s/g;
+        let regwb = /\\w\s/g;
         let tagblist = [];
         tagblist.push(regxtb);
         tagblist.push(regtlb);
@@ -101,14 +101,14 @@ function validateUSFM(textDocument) {
         tagblist.push(regfb);
         tagblist.push(regwb);
 
-        let regxte = /\\xt\*/;
-        let regtle = /\\tl\*/;
-        let regnde = /\\nd\*/;
-        let regxe = /\\x\*/;
-        let regke = /\\k\*:/;
-        let regrqe = /\\rq\*/;
-        let regfe = /\\f\*/;
-        let regwe = /\\w\*/;
+        let regxte = /\\xt\*|\\x\*/g;
+        let regtle = /\\tl\*/g;
+        let regnde = /\\nd\*/g;
+        let regxe = /\\x\*/g;
+        let regke = /\\k\*:/g;
+        let regrqe = /\\rq\*/g;
+        let regfe = /\\f\*/g;
+        let regwe = /\\w\*/g;
         let tagelist = [];
         tagelist.push(regxte);
         tagelist.push(regtle);
@@ -126,10 +126,11 @@ function validateUSFM(textDocument) {
                 let endmatch = sourceCodeArr[line].match(regexend);
                 if (match !== null && match.index !== undefined && endmatch === null) {
                     let temptagend = String(regexend);
-                    temptagend = temptagend.replace("/", "");
+                    temptagend = temptagend.replace("/g", "");
                     temptagend = temptagend.replace("\\", "");
                     temptagend = temptagend.replace("\\\*", "\*");
                     temptagend = temptagend.replace("/", "");
+					temptagend = temptagend.replace("/", "");
                     diagnostics.push({
                         severity: vscode_languageserver_1.DiagnosticSeverity.Error,
                         range: {
@@ -139,30 +140,29 @@ function validateUSFM(textDocument) {
                         message: "Missing closing " + temptagend + " tag",
                         source: "ex"
                     });
-                    //  diagnostics.push({
-                    //      severity: 1,
-                    //      range: {
-                    //          start: match.index,
-                    //          end: match.index + match.length,
-                    //      },
-                    //      message: `missing a closing tag`,
-                    //      source: "ex"
-                    //  });
-                    //  //Diagnostic({ severity: DiagnosticSeverity.Error, message: "line " + line + " is missing a closing tag" });
-                    //  //sendDiagnostics({ uri: textDocument.uri, diagnostics });
+
                     connection.console.log("Found a broken reference at " + match.index + " on line " + line);
-                    //vscode.window.showInformationMessage('location (' + line + ',' + match.index + ')' + 'Broken verse reference - missing closing tag!');
-                    //vscode.window.activeTerminal.sendText("Found missing tag")
-                    //let range = new vscode.Range(
-                    //    new vscode.Position(line, match.index),
-                    //    new vscode.Position(line, match.index + match[0].length)
-                    //);
-
-                    //let decoration = { range };
-
-                    //decorationsArray.push(decoration);
-
                 }
+				// checking for multiple tags and brokens - must have exception for \x \xt \x*
+				let strLine = sourceCodeArr[line].toString();
+				let arrFinds = [...strLine.matchAll(regexbegin)];
+				let arrEnds = [...strLine.matchAll(regexend)];
+				if (arrFinds.length !== arrEnds.length) {
+					let temptagend = String(regexend);
+                    temptagend = temptagend.replace("/g", "");
+                    temptagend = temptagend.replace("\\", "");
+                    temptagend = temptagend.replace("\\\*", "\*");
+                    temptagend = temptagend.replace("/", "");
+					diagnostics.push({
+                        severity: vscode_languageserver_1.DiagnosticSeverity.Error,
+                        range: {
+                            start: { line: line, character: arrFinds[0].index },
+                            end: { line: line, character: arrFinds[0].index + 2 },
+                        },
+                        message: "A tag is missing " + temptagend + " tag",
+                        source: "ex"
+                    });
+				}
             }
         }
 

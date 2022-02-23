@@ -2,7 +2,7 @@
     "name": "usfmforbi",
     "displayName": "USFM Validator for Bibles International",
     "description": "Sytanx highlighting of USFM documents used by Bibles International",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "engines": {
         "vscode": "^1.43.0"
     },

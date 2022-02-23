@@ -120,7 +120,7 @@
 			"name": "text.wordlist"
 		},
 		"quoteref": {
-			"match": "\\\\rq.*?\\\\rq\\*",
+			"match": "\\\\rq.*?\\\\rq\\*|\\\\r.*\n",
 			"name": "text.quoteref"
 		},
 		"introoutref": {

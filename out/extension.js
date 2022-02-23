@@ -24,7 +24,8 @@ const vscode_languageclient_1 = require("vscode-languageclient");
 //const { DiagnosticSeverity, Diagnostic } = require("vscode-languageclient");
 let client;
 const decorationType = vscode.window.createTextEditorDecorationType({
-    backgroundColor: 'cyan',
+    backgroundColor: '#FFEB3B',
+	//fontWeight: "bold",
     border: '1px solid white',
 });
 
@@ -112,7 +113,7 @@ function decorate() {
     tagblist.push(regfb);
     tagblist.push(regwb);
 
-    let regxte = /\\xt\*/;
+    let regxte = /\\xt\*|\\x\*/;
     let regtle = /\\tl\*/;
     let regnde = /\\nd\*/;
     let regxe = /\\x\*/;
@@ -137,6 +138,7 @@ function decorate() {
             let endmatch = sourceCodeArr[line].match(regexend);
             if (match !== null && match.index !== undefined && endmatch === null) {
                 let temptagend = String(regexend);
+				temptagend = temptagend.replace("/g", "");
                 temptagend = temptagend.replace("/", "");
                 temptagend = temptagend.replace("\\", "");
                 temptagend = temptagend.replace("\\\*", "\*");
@@ -146,11 +148,42 @@ function decorate() {
                 //vscode.window.activeTerminal.sendText("Found missing tag")
                 let range = new vscode.Range(
                     new vscode.Position(line, match.index),
-                    new vscode.Position(line, match.index + match[0].length)
+                    new vscode.Position(line, sourceCodeArr[line].length - 1)
                 );
                 let decoration = { range };
                 decorationsArray.push(decoration);
             }
+			// checking for multiple tags and brokens - must have exception for \x \xt \x*
+			let strLine = String(sourceCodeArr[line]);
+			let strTemp = String(regexbegin);
+			strTemp = strTemp.replaceAll("/", "");
+			let gBegin = new RegExp(strTemp,'g');
+			strTemp = String(regexend);
+			strTemp = strTemp.replaceAll("/", "");
+			let gEnd = new RegExp(strTemp,'g');
+			let arrFinds = [...strLine.matchAll(gBegin)];
+			let arrEnds = [...strLine.matchAll(gEnd)];
+			if (arrFinds !== null && arrFinds !== undefined && arrFinds.length !== 0 && arrFinds.length !== arrEnds.length) {
+				let temptagend = String(regexend);
+                temptagend = temptagend.replaceAll("/g", "");
+                temptagend = temptagend.replace("\\", "");
+                temptagend = temptagend.replace("\\\*", "\*");
+                temptagend = temptagend.replaceAll("/", "");
+				let errorline = line + 1;
+				console.log("Line " + errorline + " is missing a tag - " + temptagend);
+                vscode.window.showInformationMessage('Missing tag on line (' + errorline + ',' + arrFinds[0].index + ')' + 'for tag: ' + temptagend);
+				let lineend = strLine.length - 1;
+				//let linelength = lineend - arrFinds[0].index;
+				//if (arrEnds !== null && arrEnds !== undefined && arrEnds.length !== 0) {
+				//	lineend = arrEnds[arrEnds.length -1].index;
+				//}
+				let range = new vscode.Range(
+                    new vscode.Position(line, arrFinds[0].index),
+                    new vscode.Position(line, lineend)
+                );
+                let decoration = { range };
+                decorationsArray.push(decoration);
+			}
         }
     }
 
