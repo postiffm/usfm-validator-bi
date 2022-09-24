@@ -130,7 +130,7 @@ function validateUSFM(textDocument) {
                     temptagend = temptagend.replace("\\", "");
                     temptagend = temptagend.replace("\\\*", "\*");
                     temptagend = temptagend.replace("/", "");
-					temptagend = temptagend.replace("/", "");
+                    temptagend = temptagend.replace("/", "");
                     diagnostics.push({
                         severity: vscode_languageserver_1.DiagnosticSeverity.Error,
                         range: {
@@ -143,26 +143,39 @@ function validateUSFM(textDocument) {
 
                     connection.console.log("Found a broken reference at " + match.index + " on line " + line);
                 }
-				// checking for multiple tags and brokens - must have exception for \x \xt \x*
-				let strLine = sourceCodeArr[line].toString();
-				let arrFinds = [...strLine.matchAll(regexbegin)];
-				let arrEnds = [...strLine.matchAll(regexend)];
-				if (arrFinds.length !== arrEnds.length) {
-					let temptagend = String(regexend);
+                // checking for multiple tags and brokens - must have exception for \x \xt \x*
+                let strLine = sourceCodeArr[line].toString();
+                let arrFinds = [...strLine.matchAll(regexbegin)];
+                let arrEnds = [...strLine.matchAll(regexend)];
+                if (arrFinds.length !== arrEnds.length) {
+                    let temptagend = String(regexend);
                     temptagend = temptagend.replace("/g", "");
                     temptagend = temptagend.replace("\\", "");
                     temptagend = temptagend.replace("\\\*", "\*");
                     temptagend = temptagend.replace("/", "");
-					diagnostics.push({
-                        severity: vscode_languageserver_1.DiagnosticSeverity.Error,
-                        range: {
-                            start: { line: line, character: arrFinds[0].index },
-                            end: { line: line, character: arrFinds[0].index + 2 },
-                        },
-                        message: "A tag is missing " + temptagend + " tag",
-                        source: "ex"
-                    });
-				}
+                    try {
+                        diagnostics.push({
+                            severity: vscode_languageserver_1.DiagnosticSeverity.Error,
+                            range: {
+                                start: { line: line, character: arrFinds[0].index },
+                                end: { line: line, character: arrFinds[0].index + 2 },
+                            },
+                            message: "A tag is missing " + temptagend + " tag",
+                            source: "ex"
+                        });
+                    }
+                    catch {
+                        diagnostics.push({
+                            severity: vscode_languageserver_1.DiagnosticSeverity.Error,
+                            range: {
+                                start: { line: line, character: 0 },
+                                end: { line: line, character: 0 },
+                            },
+                            message: "A tag is missing " + temptagend + " tag",
+                            source: "ex"
+                        });
+                    }
+                }
             }
         }
 
